@@ -3,13 +3,13 @@
   $age = 54;
   $email = 's.culackow@gmail.com';
   $city = 'Силламяэ';
-  $about = 'Учусь в Нетологи на веб-разработчика';
+  $about = 'веб-разработчика';
 ?>
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Document</title>
+  <title><?= $name . ' - ' . $about;?></title>
 </head>
 <body>
 <h1>Страница пользователя <?= $name ?></h1>
