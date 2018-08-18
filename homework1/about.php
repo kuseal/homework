@@ -3,7 +3,7 @@
   $age = 54;
   $email = 's.culackow@gmail.com';
   $city = 'Силламяэ';
-  $about = 'веб-разработчика';
+  $about = 'веб-разработчик';
 ?>
 <!doctype html>
 <html lang="en">
