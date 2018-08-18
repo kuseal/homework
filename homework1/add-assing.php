@@ -13,12 +13,12 @@
 
   while (true) {
     if ($x1 > $x) {
-      echo "<p>Задуманное число \"$x\"  НЕ входит в числовой ряд </p>";
+      $info = "<p>Задуманное число \"$x\"  НЕ входит в числовой ряд </p>";
       break;
     }
 
     if ($x1 == $x) {
-      echo "<p>Задуманное число \"$x\" входит в числовой ряд </p>";
+      $info =  "<p>Задуманное число \"$x\" входит в числовой ряд </p>";
       break;
     }
 
@@ -36,6 +36,7 @@
   <title>Fibonacci numbers</title>
 </head>
 <body>
+<?= $info;?>
 <form method="GET" action="#">
   <input name="num" placeholder="number">
   <button type="submit">Go</button>
