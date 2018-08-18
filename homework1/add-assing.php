@@ -4,10 +4,10 @@
   if (isset($_GET['num']) and !empty($_GET['num'])) {
     $x = $_GET['num'];
   } else {
-    $x = '0';
+    $x = 1;
   }
 
-  $x1 = 0;
+  $x1 = 1;
   $x2 = 1;
   $i = 1;
 
