@@ -1,7 +1,7 @@
 <?php
   // Числовой ряд Фибоначчи
 
-  if (isset($_GET['num'])) {
+  if (isset($_GET['num']) and !empty($_GET['num'])) {
     $x = $_GET['num'];
   } else {
     $x = '0';
