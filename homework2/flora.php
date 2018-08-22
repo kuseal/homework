@@ -14,19 +14,15 @@
 
 
 // 2.
-  $i = 0;
   foreach ($flora as $key => $item) {
-
     foreach ($item as $value) {
       $arr = explode(' ', $value);
       if ($arr[1]) {
-
         $arr1[] = $arr[0];
         $arr2[] = $arr[1];
         $arrKey[] = $key;
       }
     }
-
   }
 
 // 3.
@@ -37,9 +33,6 @@
     foreach ($arrKey as $key => $value) {
       if ($k == $value) {
         echo "$arr1[$key] $arr2[$key], ";
-
       }
-
     }
-
   }
