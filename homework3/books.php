@@ -16,9 +16,8 @@
 
     }
   }
-
   $fp = fopen(__DIR__ . "/books.csv", 'a+');
-  foreach ($arr3 as $value){
+  foreach ($arr3 as $value) {
     fputcsv($fp, $value, ';');
   }
   fclose($fp);
