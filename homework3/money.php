@@ -2,7 +2,7 @@
   if (isset($argv[1])) {
     if ($argv[1] === '--today') {
       $row = 1;
-      $handle = fopen("money.csv", "r");
+      $handle = fopen("test.csv", "r");
       if ($handle !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
           if ($data[0] === date('Y-m-d')) {
@@ -20,7 +20,7 @@
       $list = [
           [$date, $price, $prod]
       ];
-      $fp = fopen(__DIR__ . "/money.csv", 'a+');
+      $fp = fopen(__DIR__ . "/test.csv", 'a+');
 
       foreach ($list as $item) {
         fputcsv($fp, $item, ';');
