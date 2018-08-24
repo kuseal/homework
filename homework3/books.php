@@ -1,6 +1,6 @@
 <?php
-
-  $query = urlencode('Гарри+Потер');
+if($argv[1]){
+  $query = urlencode($argv[1]);
   $data = file_get_contents('https://www.googleapis.com/books/v1/volumes?q=' . $query);
   $result = json_decode($data, true);
 
@@ -21,5 +21,6 @@
     fputcsv($fp, $value, ';');
   }
   fclose($fp);
-  echo '<pre>';
-  var_dump($arr3);
+}else{
+  echo "Ошибка! Нет названия книги";
+}
