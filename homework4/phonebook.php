@@ -8,6 +8,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Phonebook</title>
+  <style>
+    td {
+      padding: 5px; /* Поля вокруг текста */
+      border: 1px solid #000000; /* Граница вокруг ячеек */
+    }
+  </style>
 </head>
 <body>
 <h1>Phonebook</h1>
@@ -18,10 +24,8 @@
     <th>Адрес</th>
     <th>Телефоны</th>
   </tr>
-
   <?php foreach ($result as $value): ?>
     <tr>
-
       <td><?php echo $value['firstName'] ?></td>
       <td><?php echo $value['lastName'] ?></td>
       <td><?php echo $value['address'] ?></td>
@@ -32,7 +36,6 @@
       </td>
     </tr>
   <?php endforeach; ?>
-
 </table>
 </body>
 </html>
