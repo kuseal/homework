@@ -16,7 +16,7 @@
 // 2.
   foreach ($flora as $key => $item) {
     foreach ($item as $value) {
-      $arr[] = explode(' ', $value);
+      $arr = explode(' ', $value);
       if (isset($arr[1])) {
         $arr1[] = $arr[0];
         $arr2[] = $arr[1];
