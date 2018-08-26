@@ -1,36 +1,36 @@
 <?php
   if (isset($argv[1])) {
     if ($argv[1] === '--today') {
-      $row = 1;
+      $arr = '';
       $handle = fopen("test.csv", "r");
       if ($handle !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
           if ($data[0] === date('Y-m-d')) {
-            $arr += $data[1];
+            if(is_numeric($data[1])){
+              $arr += $data[1];
+            }else{
+              $arr = 0;
+            }
           }
-          $row++;
+
         }
         fclose($handle);
-        echo date('Y-m-d')." расход за день $arr";
+        echo date('Y-m-d') . " расход за день $arr";
       }
     } else {
       $date = date('Y-m-d');
       $price = $argv[1];
       $prod = implode(' ', array_slice($argv, 2));
-      $list = [
-          [$date, $price, $prod]
-      ];
-      $fp = fopen(__DIR__ . "/test.csv", 'a+');
 
-      foreach ($list as $item) {
-        fputcsv($fp, $item, ';');
-      }
+      $fp = fopen(__DIR__ . "/test.csv", 'a+');
+      fputcsv($fp, [$date, $price, $prod], ';');
+
       fclose($fp);
 
       echo "Добавлена строка: $date,  $price, $prod";
     }
 
-  }else{
+  } else {
     echo 'Ошибка! Аргументы не заданы. Укажите флаг --today или запустите скрипт с аргументами {цена} и {описание покупки}';
   }
 
