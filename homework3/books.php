@@ -20,7 +20,7 @@
           foreach ($volumeInfo as $info) {
             if (isset($info["authors"])) {
               $id = $i++;
-              $books[] = [ $info["title"], $info["authors"][0]];
+              $books[] = [$id, $info["title"], $info["authors"][0]];
 
             }
 
