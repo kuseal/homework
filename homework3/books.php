@@ -25,7 +25,6 @@
         }
       }
 
-      //var_dump($books);
       $fp = fopen(__DIR__ . "/books.csv", 'a+');
 
       foreach ($books as $value) {
