@@ -30,9 +30,13 @@
       <td><?php echo $value['lastName'] ?></td>
       <td><?php echo $value['address'] ?></td>
       <td>
-        <?php foreach ($value['phoneNumber'] as $value) {
-          echo $value . '<br>';
-        } ?>
+        <?php if(is_array($value['phoneNumber'])):?>
+        <?php foreach ($value['phoneNumber'] as $value):?>
+          <?php echo $value ?><br>
+        <?php endforeach; ?>
+        <?php else:?>
+        <?php echo $value['phoneNumber'];?>
+        <?php endif;?>
       </td>
     </tr>
   <?php endforeach; ?>
