@@ -1,5 +1,5 @@
 <?php
-
+// 1.
   $flora = [
       'Africa' => [
           'Panthera leo', 'Loxodonta africana', 'Okapia johnstoni', 'Giraffa camelopardalis', 'Crocodylus niloticus'
@@ -14,10 +14,9 @@
 
 
 // 2.
-
   $arr1 = [];
   $arr2 = [];
-  $arrKey = [];
+
   foreach ($flora as $key => $item) {
     foreach ($item as $value) {
       $arr = explode(' ', $value);
