@@ -14,25 +14,25 @@
 
 
 // 2.
+
+  $arr1 = [];
+  $arr2 = [];
+  $arrKey = [];
   foreach ($flora as $key => $item) {
     foreach ($item as $value) {
       $arr = explode(' ', $value);
-      if (isset($arr[1])) {
+      if (count($arr) === 2) {
         $arr1[] = $arr[0];
         $arr2[] = $arr[1];
-        $arrKey[] = $key;
       }
     }
   }
-
-// 3.
+  shuffle($arr1);
   shuffle($arr2);
-
-  foreach ($flora as $k => $item) {
-    echo "<h2>$k</h2>";
-    foreach ($arrKey as $key => $value) {
-      if ($k == $value) {
-        echo "$arr1[$key] $arr2[$key], ";
-      }
-    }
+  $arrFlora = [];
+  for ($i = 0; $i < count($arr1); $i++) {
+    $arrFlora[] = "$arr1[$i] $arr2[$i]";
   }
+
+  echo '<pre>';
+  var_dump($arrFlora);
