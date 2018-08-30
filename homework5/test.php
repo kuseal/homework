@@ -24,6 +24,8 @@ $info = [];
             }
           }
         }
+      }else{
+        $info[] = 'Тест ' . $results[$row]['label'] . ': <b>Нет ответа</b><br>';
       }
       $row++;
     }
