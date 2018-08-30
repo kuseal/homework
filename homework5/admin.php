@@ -1,36 +1,45 @@
 <?php
-  if (isset($_GET['test'])) {
-    $test = htmlspecialchars($_GET['test']);
+  if (isset($_FILES)) {
+    if (array_key_exists("userfile", $_FILES)) {
+      $dirname = 'json';
+      $count = count(scandir('json'))-2;
+      $filename = 'test_'.($count + 1).'.json';
+      $uploadfile = $dirname.'/'.$filename ;
 
-    $str = file_get_contents(__DIR__ . '/tests.json');
-    $result = json_decode($str, true);
-    $params = [];
-    foreach ($result as $value) {
-      if ($value['num'] == $test) {
-        foreach ($value as $key=>$item) {
-          $params[$key] = $item;
-        }
-
-      }
-    }
+if($_FILES['userfile']['type'] ==  "application/json" ){
+  if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
+    echo "Файл корректен и был успешно загружен.\n";
+  } else {
+    echo "Возможная атака с помощью файловой загрузки!\n";
   }
-//  var_dump($params)
-  ?>
+}else{
+  echo "Возможная атака с помощью файловой загрузки!\n";
+}
+}
+
+    var_dump($filename);
+  }
+
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title><?php echo $params['label']?></title>
+  <title>
+    Admin
+  </title>
+  <style>
+    div {
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
-<form method="POST" action="test.php" name="form">
-  <legend><?php echo $params['label']?></legend>
-  <label><input type="radio" name="q<?php echo $params['num']?>" value="<?php echo $params['params'][0]?>"> <?php echo $params['params'][0]?></label>
-  <label><input type="radio" name="q<?php echo $params['num']?>" value="<?php echo $params['params'][1]?>"> <?php echo $params['params'][1]?></label>
-  <label><input type="radio" name="q<?php echo $params['num']?>" value="<?php echo $params['params'][2]?>"> <?php echo $params['params'][2]?></label>
-  <label><input type="radio" name="q<?php echo $params['num']?>" value="<?php echo $params['params'][3]?>"> <?php echo $params['params'][3]?></label>
-  <input type="hidden" name="num" value="<?php echo $params['num']?>">
-<div><input type="submit" value="Ответ"></div>
+<h2>Json file upload</h2>
+<form enctype="multipart/form-data" action="admin.php" method="POST">
+  <div><input type="file" name="userfile"></div>
+  <div><input type="submit" value="Отправить"></div>
 </form>
 </body>
 </html>
