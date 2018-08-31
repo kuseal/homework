@@ -2,22 +2,20 @@
   if (isset($_FILES)) {
     if (array_key_exists("userfile", $_FILES)) {
       $dirname = 'json';
-      $count = count(scandir('json'))-2;
-      $filename = 'test_'.($count + 1).'.json';
-      $uploadfile = $dirname.'/'.$filename ;
+      $count = count(scandir('json')) - 2;
+      $filename = 'test_' . ($count + 1) . '.json';
+      $uploadfile = $dirname . '/' . $filename;
 
-if($_FILES['userfile']['type'] ==  "application/json" ){
-  if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-    echo "Файл корректен и был успешно загружен.\n";
-  } else {
-    echo "Возможная атака с помощью файловой загрузки!\n";
-  }
-}else{
-  echo "Возможная атака с помощью файловой загрузки!\n";
-}
-}
-
-    var_dump($filename);
+      if ($_FILES['userfile']['type'] == "application/json") {
+        if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
+          echo "Файл корректен и был успешно загружен.\n";
+        } else {
+          echo "Возможная атака с помощью файловой загрузки!\n";
+        }
+      } else {
+        echo "Возможная атака с помощью файловой загрузки!\n";
+      }
+    }
   }
 
 
