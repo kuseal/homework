@@ -64,8 +64,7 @@ $info = [];
         <fieldset>
           <legend><?php echo $result['label'] ?></legend>
           <?php foreach ($result['params'] as $key => $param): ?>
-            <label><input type="radio" name="<?php echo $result['name']; ?>"
-                          value="<?php echo $key; ?>"> <?php echo $key; ?></label>
+            <div><input type="radio" name="<?php echo $result['name']; ?>" value="<?php echo $key; ?>"> <?php echo $key; ?></div>
           <?php endforeach; ?>
         </fieldset>
       <?php endforeach; ?>
