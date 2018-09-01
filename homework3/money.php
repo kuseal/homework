@@ -12,7 +12,6 @@
               $arr = 0;
             }
           }
-
         }
         fclose($handle);
         echo date('Y-m-d') . " расход за день $arr";
