@@ -45,7 +45,7 @@
       <?php endforeach; ?>
     </td>
     <td width="50%">
-      <?php if ($_SESSION['user']['status']): ?>
+      <?php if (!isset($_SESSION['user']['status']) || $_SESSION['user']['status'] != '1'): ?>
         <a href="admin.php"><button>Добавить тест</button></a>
       <?php endif; ?>
     </td>
