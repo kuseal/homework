@@ -1,8 +1,13 @@
 <?php
   session_start();
-  if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
-    header("HTTP/1.0 403 Forbidden");
-    die('Закрытый доступ');
+  if (isset($_GET['logout'])) {
+    session_destroy();
+    header('Location: index.php');
+    die();
+  }
+  if (empty($_SESSION['user'])) {
+    header($_SERVER['SERVER_PROTOCOL'] . "403 Forbidden");
+    die('<h2>Ошибка 403</h2> Закрытый доступ');
   }
 
   function stringx($im, $fontSiize, $fontFile, $string)
@@ -17,7 +22,7 @@
     $query = htmlspecialchars($_GET['test']);
     $data = file_get_contents(__DIR__ . '/json/' . $query . '.json');
     if (!$data) {
-      header("HTTP/1.0 404 Not Found");
+      header($_SERVER['SERVER_PROTOCOL'] . " Not Found");
       die("<h2>Ошибка 404</h2> <p>Нет такой страницы</p>");
     }
     $results = json_decode($data, true);
@@ -26,68 +31,69 @@
       exit;
     }
   } else {
-    header("HTTP/1.0 404 Not Found");
+    header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
     die("<h2>Ошибка 404</h2> <p>Нет такой страницы</p>");
   }
   $info = [];
   if (!empty($_POST)) {
-    if (empty($_POST['userName'])) {
-      $info[] = 'Имя обязательно';
-    } else {
-      $userName = trim(htmlspecialchars($_POST['userName']));
-      $countResults = count($results);
-      $row = 0;
-      $poin = [];
-      while ($row < $countResults) {
-        if (array_key_exists($results[$row]['name'], $_POST)) {
-          foreach ($results[$row]['params'] as $key => $value) {
-            if ($key == $_POST[$results[$row]['name']]) {
-              if ($value) {
-                $poin[] = '1';
-              } else {
-                $poin[] = '0';
-              }
+
+    $userName = $_SESSION['user']['firstName'];
+    $countResults = count($results);
+    $row = 0;
+    $poin = [];
+
+    while ($row < $countResults) {
+      if (array_key_exists($results[$row]['name'], $_POST)) {
+        foreach ($results[$row]['params'] as $key => $value) {
+          if ($key == $_POST[$results[$row]['name']]) {
+            if ($value) {
+              $poin[] = '1';
+            } else {
+              $poin[] = '0';
             }
-            $num[] = $_POST[$results[$row]['name']];
           }
+          $num[] = $_POST[$results[$row]['name']];
         }
-        $row++;
       }
-      if (!empty($poin)) {
-        $poins = array_sum($poin);
-      } else {
-        $poins = '0';
-      }
-      if (empty($num)) {
-        $info[] = 'Нет ни одного ответа';
-      } else {
-        $im = imagecreatefrompng(__DIR__ . '/images/sert14.png');
-        $black = imagecolorallocate($im, 0, 0, 0);
-        $fontFile = __DIR__ . '/fonts/arial.ttf';
+      $row++;
+    }
 
-        $string1 = 'о прохождлении теста выдан на имя';
-        $fontSize1 = 13;
+    if (!empty($poin)) {
+      $poins = array_sum($poin);
+    } else {
+      $poins = '0';
+    }
 
-        $string2 = $userName;
-        $fontSize2 = 16;
+    if (empty($num)) {
+      $info[] = 'Нет ни одного ответа';
+    } else {
+      $im = imagecreatefrompng(__DIR__ . '/images/sert14.png');
+      $black = imagecolorallocate($im, 0, 0, 0);
+      $fontFile = __DIR__ . '/fonts/arial.ttf';
 
-        $string3 = "количество баллов $poins из $countResults";
-        $fontSize3 = 16;
+      $string1 = 'о прохождлении теста выдан на имя';
+      $fontSize1 = 13;
 
-        $x1 = stringx($im, $fontSize1, $fontFile, $string1);
-        $x2 = stringx($im, $fontSize2, $fontFile, $string2);
-        $x3 = stringx($im, $fontSize3, $fontFile, $string3);
+      $string2 = $userName;
+      $fontSize2 = 16;
+
+      $string3 = "количество баллов $poins из $countResults";
+      $fontSize3 = 16;
+
+      $x1 = stringx($im, $fontSize1, $fontFile, $string1);
+      $x2 = stringx($im, $fontSize2, $fontFile, $string2);
+      $x3 = stringx($im, $fontSize3, $fontFile, $string3);
 
 
-        imagefttext($im, $fontSize1, 0, $x1, 250, $black, $fontFile, $string1);
-        imagefttext($im, $fontSize2, 0, $x2, 300, $black, $fontFile, $string2);
-        imagefttext($im, $fontSize3, 0, $x3, 350, $black, $fontFile, $string3);
+      imagefttext($im, $fontSize1, 0, $x1, 250, $black, $fontFile, $string1);
+      imagefttext($im, $fontSize2, 0, $x2, 300, $black, $fontFile, $string2);
+      imagefttext($im, $fontSize3, 0, $x3, 350, $black, $fontFile, $string3);
 
-        header('Content-Type: image/png');
+      header('Content-Type: image/png');
 
-        imagepng($im);
-        imagedestroy($im);
-      }
+      imagepng($im);
+      imagedestroy($im);
+      die();
     }
   }
 
@@ -98,6 +104,10 @@
   <meta charset="UTF-8">
   <title>Тесты</title>
   <style>
+    div {
+      margin: 10px 0;
+    }
+
     form {
       width: 600px;
     }
@@ -112,6 +122,7 @@
   </style>
 </head>
 <body>
+<h2>Тестируемый <?php echo $_SESSION['user']['firstName']; ?></h2>
 <?php if (!empty($info)): ?>
   <?php foreach ($info as $value): ?>
     <p class="error"><?php echo $value; ?></p>
@@ -121,13 +132,6 @@
 
 <?php if (isset($query)): ?>
   <form method="POST" action="test.php?test=<?php echo $query; ?>">
-
-    <div>
-      <label for="userName">Ваше имя</label><br>
-      <input type="text" name="userName" id="userName"
-             value="<?php if(isset($_SESSION['user']['firstName'])){echo $_SESSION['user']['firstName']; }?>" placeholder="Имя">
-    </div>
-
     <?php foreach ($results as $result): ?>
       <fieldset>
         <legend><?php echo $result['label'] ?></legend>
@@ -144,5 +148,6 @@
   <a href="list.php">Список тестов</a>
 <?php endif; ?>
 <div><a href="list.php">Список тестов</a></div>
+<div><a style="color: red" href="list.php?logout">Выход</a></div>
 </body>
 </html>

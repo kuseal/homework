@@ -1,71 +1,60 @@
 <?php
   session_start();
 
-  function getUsers()
-  {
-    $usersData = file_get_contents(__DIR__ . '/data/login.json');
-    $users = json_decode($usersData, true);
-    if (empty($users)) {
-      return [];
-    }
-    return $users;
-  }
-
-  function getUser($login)
-  {
-    $users = getUsers();
-    foreach ($users as $user) {
-      if ($login === $user['login']) {
-        return $user;
-      }
-    }
-    return null;
-  }
-
-  function login($login, $password)
-  {
-    $user = getUser($login);
-    if ($user && $user['pass'] == $password) {
-      $_SESSION['user'] = $user;
-      return true;
-    }
-    return false;
+  if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
+    header('Location: list.php');
   }
 
   $error = [];
   $count = '';
-  if (isset($_GET['guest'])) {
-    $_SESSION['user'] = 'guest';
-    header('Location:list.php');
-  }
 
-if (!empty($_POST)){
-  $count = isset($_COOKIE['count']) ? $_COOKIE['count'] + 1 : 1;
-  setcookie('count', $count, time() + 3600);
-  if(isset($_POST['captcha']) && $_POST['captcha'] !== '3'){
-    $error[]= 'Неверный ответ на вопрос';
-  }
-  $userName = trim(htmlspecialchars($_POST['login']));
-  $userPass = trim(htmlspecialchars($_POST['password']));
-  $usersData = file_get_contents(__DIR__.'/data/login.json');
-  $users = json_decode($usersData, true);
-  if(!empty($users)){
-    foreach ($users as $user){
-      if($_POST['login'] === $user['login']){
-        foreach ($user as $value){
-          if($_POST['password'] == $user['pass'] && empty($error)){
-            $_SESSION['user'] = $user;
-            setcookie('count', $count, time() - 1);
-            header('Location: list.php');
+  if (!empty($_POST)) {
+
+    $count = isset($_COOKIE['count']) ? $_COOKIE['count'] + 1 : 1;
+    setcookie('count', $count, time() + 3600);
+    if (isset($_POST['captcha']) && $_POST['captcha'] !== '3') {
+      $error[] = 'Неверный ответ на вопрос';
+    }
+
+    if (isset($_POST['submitGuest']) && !empty($_POST['guest'])) {
+      $user = trim(htmlspecialchars($_POST['guest']));
+      //session_start();
+      $_SESSION['user'] = [
+          'firstName' => $user, 'status' => 0
+      ];
+      setcookie('count', $count, time() - 1);
+      header('Location:list.php');
+      die();
+
+    }
+
+    if (isset($_POST['submitUser']) && !empty($_POST['login'])) {
+
+      $userName = trim(htmlspecialchars($_POST['login']));
+      $userPass = trim(htmlspecialchars($_POST['password']));
+      $usersData = file_get_contents(__DIR__ . '/data/login.json');
+      $users = json_decode($usersData, true);
+
+      if (!empty($users)) {
+        foreach ($users as $user) {
+          if ($_POST['login'] === $user['login']) {
+
+            foreach ($user as $value) {
+              if ($_POST['password'] === $user['pass']) {
+                $_SESSION['user'] = $user;
+                setcookie('count', $count, time() - 1);
+                header('Location: list.php');
+                die();
+              }
+            }
+          } else {
+            $error[] = 'Неверный логин или пароль';
           }
         }
-      }else{
-        $error[] = 'Неверный логин или пароль';
       }
     }
   }
 
-}
   if ($count > 9) {
     setcookie('count', $count, time() - 1);
     setcookie('stop', '1', time() + 3600);
@@ -94,6 +83,10 @@ if (!empty($_POST)){
 </ul>
 <div><a href="index.php?guest=гость">Войти как гость</a></div>
 <?php if (!isset($_COOKIE['stop']) || $_COOKIE['stop'] != '1'): ?>
+  <form method="post">
+    <input type="text" name="guest" placeholder="Имя">
+    <input type="submit" name="submitGuest" value="Зайти как гость">
+  </form>
   <form method="POST">
     <div>
       <label>Войти как зарегистрированный пользователь</label><br>
@@ -107,8 +100,9 @@ if (!empty($_POST)){
         <input type="radio" name="captcha" value="3" id="captcha">Нет
       </div>
     <?php endif; ?>
-    <input type="submit" value="Вход">
+    <input type="submit" value="Вход" name="submitUser">
   </form>
+
 <?php else: ?>
   <p>Перекур 1 час.</p>
 <?php endif; ?>

@@ -1,9 +1,14 @@
 <?php
   session_start();
+  if (isset($_GET['logout'])) {
+    session_destroy();
+    header('Location: index.php');
+    die();
+  }
 
   if (!isset($_SESSION['user']['status']) || $_SESSION['user']['status'] != '1') {
-    header("HTTP/1.0 403 Forbidden");
-    die('Закрытый доступ');
+    header($_SERVER['SERVER_PROTOCOL'] . "403 Forbidden");
+    die('<h2>Ошибка 403</h2> Закрытый доступ');
   }
   $data = scandir('json');
   $arr = [];
@@ -79,6 +84,7 @@ if(isset($_GET['delete'])){
     </td>
   </tr>
 </table>
+<div><a style="color: red" href="list.php?logout">Выход</a></div>
 </body>
 </html>
 
