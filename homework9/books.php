@@ -7,25 +7,17 @@
 
   $pdo = new PDO(DB_DRIVER . ':host=' . DB_HOST . '; dbname=' . DB_NAME . '; charset=utf8', DB_USER, DB_PASS);
 
-  $sth = $pdo->prepare('SELECT * from  books');
-  $sth->execute();
-  $results = $sth->fetchAll(PDO::FETCH_ASSOC);
-
-  //  var_dump($results);
-
   $isbn = $title = $author = '';
 
   if (!empty($_POST)) {
-    $isbn = trim(htmlspecialchars($_POST['isbn']));
-    $title = trim(htmlspecialchars($_POST['title']));
-    $author = trim(htmlspecialchars($_POST['author']));
-
-    $smtp = $pdo->prepare('SELECT * from  books WHERE `author`=? OR `name`=? OR isbn=? ORDER BY `year` DESC');
-    $smtp->execute([$author, $title, $isbn]);
-    $results = $smtp->fetchAll(PDO::FETCH_ASSOC);
+    $isbn = trim($_POST['isbn']);
+    $title = trim($_POST['title']);
+    $author = trim($_POST['author']);
   }
+  $smtp = $pdo->prepare('SELECT * FROM  books WHERE `author` LIKE ? AND `name` LIKE ? AND isbn LIKE ?');
+  $smtp->execute(["%$author%", "%$title%", "%$isbn%"]);
+  $results = $smtp->fetchAll(PDO::FETCH_ASSOC);
 
-  // var_dump($_POST);
 ?>
 
 <!doctype html>
@@ -46,8 +38,9 @@
     th {
       background: #eceaff;
     }
-    .error{
-      color:red;
+
+    .error {
+      color: red;
       font-size: 120%;
     }
   </style>
@@ -59,9 +52,6 @@
   <input type="text" name="title" value="<?php echo $title; ?>" placeholder="Название книги">
   <input type="text" name="author" value="<?php echo $author; ?>" placeholder="Автор книги">
   <input type="submit" value="Поиск">
-  <?php if(empty($results)):?>
-    <p class="error">Нет книг с заданными параметрами</p>
-  <?php else:?>
   <table>
     <tr>
       <th>Название</th>
@@ -70,18 +60,18 @@
       <th>Жанр</th>
       <th>ISBN</th>
     </tr>
-    <?php foreach ($results as $result): ?>
-      <tr>
-        <td><?php echo $result['name'] ?></td>
-        <td><?php echo $result['author'] ?></td>
-        <td><?php echo $result['year'] ?></td>
-        <td><?php echo $result['genre'] ?></td>
-        <td><?php echo $result['isbn'] ?></td>
-      </tr>
-    <?php endforeach; ?>
-    <?php endif;?>
+    <?php if ($results): ?>
+      <?php foreach ($results as $result): ?>
+        <tr>
+          <td><?php echo $result['name'] ?></td>
+          <td><?php echo $result['author'] ?></td>
+          <td><?php echo $result['year'] ?></td>
+          <td><?php echo $result['genre'] ?></td>
+          <td><?php echo $result['isbn'] ?></td>
+        </tr>
+      <?php endforeach; ?>
+    <?php endif; ?>
   </table>
-  <a href="books.php">Все книги</a>
 </form>
 </body>
 </html>
