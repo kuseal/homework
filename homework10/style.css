@@ -1,0 +1,43 @@
+body {
+  width: 900px;
+  margin: 0 auto;
+  font-size: 16px;
+}
+
+table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background-color: azure;
+}
+
+.no {
+  color: red;
+}
+
+div {
+  margin: 10px 0;
+}
+
+.yes {
+  color: green;
+}
+
+.fs-120 {
+  font-size: 120%;
+}
+
+.error {
+  color: red;
+}
+
+.success {
+  color: green;
+}
