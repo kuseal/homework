@@ -1,0 +1,22 @@
+[
+  {
+    "type": [
+      {
+        "Числа": [
+          "TINYINT",
+          "INT",
+          "FLOAT"
+        ],
+        "Дата время":[
+          "DATE",
+          "DATETIME",
+          "TIMESTAMP"
+        ],
+        "Строки":[
+          "TEXT",
+          "VARCAR"
+        ]
+      }
+    ]
+  }
+]
