@@ -15,7 +15,7 @@
     $db->deleteCol(
             htmlspecialchars($_GET['table']),
             htmlspecialchars($_GET['delete']));
-    header('Location:viewtable.php?table=' . $_GET['table']);
+    header('Location:index.php?table=' . $_GET['table']);
     die();
   }
 
@@ -34,7 +34,7 @@
           htmlspecialchars($_POST['tableName']),
           htmlspecialchars($_POST['colName']),
           htmlspecialchars($params))) {
-        header('Location:viewtable.php?table=' . $_POST['tableName']);
+        header('Location:index.php?table=' . $_POST['tableName']);
         die();
       } else {
         $error = 'Ощибка модификации';
@@ -43,9 +43,17 @@
       if ($db->addCol(htmlspecialchars($_POST['tableName']),
           htmlspecialchars($_POST['colName']),
           htmlspecialchars($params))) {
-        header('Location:viewtable.php?table=' . $_POST['tableName']);
+        header('Location:index.php?table=' . $_POST['tableName']);
+        die();
       } else {
         $error = 'Ощибка добавления';
+      }
+    }else if(isset($_POST['ctrateTable'])){
+      if($db->createTable(htmlspecialchars($_POST['tableName']))){
+        header('Location: index.php?table='.$_POST['tableName']);
+        die();
+      }else{
+        $error = 'Ошибка. Таблица не добавлена';
       }
     }
   }
@@ -133,7 +141,7 @@
             <input type="hidden" name="modify">
           </td>
         </form>
-        <td><a href="viewtable.php?delete=<?php echo $datum['COLUMN_NAME'] ?>&table=<?php echo $datum['TABLE_NAME'] ?>">
+        <td><a href="index.php?delete=<?php echo $datum['COLUMN_NAME'] ?>&table=<?php echo $datum['TABLE_NAME'] ?>">
             <button>Удалить</button>
           </a></td>
       </tr>
